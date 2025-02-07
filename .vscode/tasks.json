@@ -4,7 +4,7 @@
     {
       "label": "Test",
       "type": "shell",
-      "command": "poetry run ruff check anyvec --fix && pytest -v --capture=no --disable-warnings"
+      "command": "poetry run ruff check anyvec --fix && pytest -v --capture=no"
     }
   ]
 }

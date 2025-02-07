@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-weaviate-client = "^4.10.4"
 pillow = "^11.1.0"
 ruff = "^0.9.3"
 requests = "^2.32.3"
