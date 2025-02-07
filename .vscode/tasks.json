@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test",
+      "type": "shell",
+      "command": "poetry run ruff check anyvec --fix && pytest -v --capture=no --disable-warnings"
+    }
+  ]
+}
