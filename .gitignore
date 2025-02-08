@@ -4,5 +4,3 @@ __pycache__/
 .env
 
 .ruff_cache/
-
-test/
