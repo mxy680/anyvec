@@ -1,5 +1,6 @@
 from anyvec.tests import test_all
 from anyvec.processing.processor import Processor
+from anyvec.vectorization.vectorizer import Vectorizer
 
 
 class AnyVecClient:
@@ -15,6 +16,7 @@ class AnyVecClient:
         self.url = url
         self._run_tests()
         self.processor = Processor(self)
+        self.vectorizer = Vectorizer(self)
 
     def _run_tests(self):
         """Run tests on the clip-inference endpoint."""
@@ -32,5 +34,5 @@ class AnyVecClient:
             dict: Success status and collection name.
         """
         text, images = self.processor.process(file, file_name)
-
-        return text, images
+        vector = self.vectorizer.vectorize(text, images, file_name, **kwargs)
+        return vector

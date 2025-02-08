@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+
 @pytest.fixture(scope="module")
 def test_client():
     """
@@ -16,12 +17,19 @@ def test_client():
     return client
 
 
-def test_vectorize(test_client):
+def test_vectorize_file_text(test_client):
     """
-    Test the vectorize method of the AnyVecClient.
+    Test the vectorization of a text file.
     """
-    text, images = test_client.vectorize(
-        "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        "anyclip-inference-test.pdf"
-    )
-    print(text, images)
+    with open("test/data/document.txt", "rb") as file:
+        vector = test_client.vectorize(file.read(), "test.txt")
+        assert vector is not None and len(vector) == 512
+
+
+def test_vectorize_pdf_file(test_client):
+    """
+    Test the vectorization of a PDF file.
+    """
+    with open("test/data/lab.pdf", "rb") as file:
+        vector = test_client.vectorize(file.read(), "test.pdf")
+        assert vector is not None and len(vector) == 512
