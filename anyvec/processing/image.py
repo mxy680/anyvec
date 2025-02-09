@@ -1,7 +1,6 @@
 import fitz
 import base64
 
-
 def extract_images_pdf(buffer: bytes) -> list[bytes]:
     images: list[bytes] = []
     pdf_document = fitz.open("pdf", buffer)

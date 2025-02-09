@@ -1,6 +1,9 @@
 from anyvec.tests import test_all
 from anyvec.processing.processor import Processor
 from anyvec.vectorization.vectorizer import Vectorizer
+from anyvec.vectorization.utils import cosine_similarity
+from anyvec.models import VectorizationPayload
+from anyvec.exceptions import MissingFileNameError, InsufficientInputError
 
 
 class AnyVecClient:
@@ -22,17 +25,53 @@ class AnyVecClient:
         """Run tests on the clip-inference endpoint."""
         test_all(self.url)
 
-    def vectorize(self, file: str | bytes, file_name: str, **kwargs):
+    def vectorize(self, request: VectorizationPayload, **kwargs):
         """
-        Vectorizes a file and stores it in Weaviate.
+        Vectorizes a file or text and stores it in Weaviate.
 
         Args:
-            file (bytes | str): File buffer or https URL.
-            fileName (str): Full file name (e.g., "document.pdf").
+            request (VectorizationRequest): The vectorization request object.
             **kwargs: Additional parameters.
+
         Returns:
             dict: Success status and collection name.
+
+        Raises:
+            InsufficientInputError: If no valid input is provided.
+            MissingFileNameError: If file_name is required but missing.
         """
-        text, images = self.processor.process(file, file_name)
-        vector = self.vectorizer.vectorize(text, images, file_name, **kwargs)
-        return vector
+
+        # Validate input
+        try:
+            request.validate()
+        except ValueError as e:
+            if "file_name" in str(e):
+                raise MissingFileNameError()
+            else:
+                raise InsufficientInputError()
+
+        # Process text directly if provided
+        if request.text_content:
+            text = request.text_content
+            images = []  # No image processing needed
+        else:
+            text, images = self.processor.process(
+                request.file_content or request.file_url, file_name=request.file_name
+            )
+            
+        # Vectorize and store in Weaviate
+        return self.vectorizer.vectorize(text, images, **kwargs)
+
+    def compare(self, vector1: list[float], vector2: list[float]):
+        """
+        Compares two vectors and returns the similarity score.
+
+        Args:
+            vector1 (list[float]): The first vector.
+            vector2 (list[float]): The second vector.
+            **kwargs: Additional parameters.
+
+        Returns:
+            float: The similarity score.
+        """
+        return cosine_similarity(vector1, vector2)

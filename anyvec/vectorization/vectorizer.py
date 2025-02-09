@@ -7,7 +7,7 @@ class Vectorizer:
     def __init__(self, client):
         self.client = client
 
-    def vectorize(self, text: str, images, file_name: str, **kwargs):
+    def vectorize(self, text: str, images: list[bytes]):
         """
         Vectorizes a file and returns the vector
 
@@ -23,7 +23,7 @@ class Vectorizer:
             "texts": [text],
             "images": images,
         }
-
+        
         try:
             res = requests.post(self.client.url + "/vectorize", json=req_body)
             resBody = res.json()
@@ -33,6 +33,6 @@ class Vectorizer:
             vectors = np.array(text_vectors + image_vectors)
             aggregated_vector = np.mean(vectors, axis=0)
             return aggregated_vector.tolist()
-        
+
         except requests.RequestException as e:
             raise APIConnectionError(self.client.url, f"Request failed: {e}")

@@ -52,3 +52,25 @@ class APIMissingVectorError(AnyVecError):
         self.expected_images = expected_images
         self.actual_texts = actual_texts
         self.actual_images = actual_images
+
+
+class VectorizationError(Exception):
+    """Base exception for vectorization errors."""
+
+    pass
+
+
+class MissingFileNameError(VectorizationError):
+    """Raised when file_name is missing for file-based processing."""
+
+    def __init__(self):
+        super().__init__("file_name is required when passing file_content or file_url.")
+
+
+class InsufficientInputError(VectorizationError):
+    """Raised when no valid input is provided."""
+
+    def __init__(self):
+        super().__init__(
+            "Provide at least one of text_content, file_content, or file_url."
+        )
