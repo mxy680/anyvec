@@ -3,7 +3,11 @@ from anyvec.processing.processor import Processor
 from anyvec.vectorization.vectorizer import Vectorizer
 from anyvec.vectorization.utils import cosine_similarity
 from anyvec.models import VectorizationPayload
-from anyvec.exceptions import MissingFileNameError, InsufficientInputError
+from anyvec.exceptions import (
+    MissingFileNameError,
+    InsufficientInputError,
+    EmptyFileError,
+)
 
 
 class AnyVecClient:
@@ -58,7 +62,10 @@ class AnyVecClient:
             text, images = self.processor.process(
                 request.file_content or request.file_url, file_name=request.file_name
             )
-            
+
+        if not text and not images:
+            raise EmptyFileError()
+
         # Vectorize and store in Weaviate
         return self.vectorizer.vectorize(text, images, **kwargs)
 

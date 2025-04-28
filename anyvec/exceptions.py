@@ -74,3 +74,17 @@ class InsufficientInputError(VectorizationError):
         super().__init__(
             "Provide at least one of text_content, file_content, or file_url."
         )
+
+
+class EmptyFileError(VectorizationError):
+    """Raised when no valid input is provided."""
+
+    def __init__(self):
+        super().__init__("No valid input provided.")
+
+
+class UnsupportedFileTypeError(VectorizationError):
+    """Raised when an unsupported file type is provided."""
+
+    def __init__(self, file_type):
+        super().__init__(f"Unsupported file type: {file_type}")
