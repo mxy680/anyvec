@@ -65,7 +65,7 @@ class AnyVecClient:
 
         if not text and not images:
             raise EmptyFileError()
-
+        
         # Vectorize and store in Weaviate
         return self.vectorizer.vectorize(text, images, **kwargs)
 
