@@ -2,9 +2,40 @@
 
 AnyVec is an open-source Python package that makes it easy to vectorize any type of file — text, images, audio, video, or code — through a single, unified interface. Traditionally, embedding different data types (like text vs. images) requires different models and disparate code paths. AnyVec abstracts away these complexities, allowing you to work with a unified API for all your vectorization needs, regardless of file type.
 
+---
+
+## Audio Transcription Support (Whisper)
+
+To use audio transcription features (for .mp3, .wav, etc.), you must manually install OpenAI Whisper and ffmpeg:
+
+```bash
+pip install git+https://github.com/openai/whisper.git
+```
+
+If you're using Poetry, run:
+
+```bash
+poetry run pip install git+https://github.com/openai/whisper.git
+```
+
+You must also have ffmpeg installed on your system:
+- **macOS:** `brew install ffmpeg`
+- **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
+
+If Whisper is not installed, attempting to process audio files will result in a clear error message. See the code for details.
+
+---
+
 ## Building the CLIP Docker Image
 
-To build the Docker image for the CLIP component, run the following commands from the project root:
+**First, clone this repository and change into the project directory:**
+
+```bash
+git clone https://github.com/mxy680/clip-inference.git
+cd clip-inference
+```
+
+Then, to build the Docker image for the CLIP component, run the following commands from the project root:
 
 ```bash
 cd clip
