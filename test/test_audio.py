@@ -2,14 +2,22 @@ import os
 from anyvec.processing.processor import Processor
 
 
-def test_vectorize_mp3_audio():
-    wav_path = "test/assets/audio/Hi there this is you.mp3"
-    assert os.path.exists(wav_path), f"Test audio not found: {wav_path}"
-    with open(wav_path, "rb") as f:
+import pytest
+
+from anyvec.processing.processor import Processor
+import os
+
+audio_files = os.listdir("test/assets/audio")
+
+
+@pytest.mark.parametrize("filename", audio_files)
+def test_vectorize_audio_formats(filename):
+    path = os.path.join("test/assets/audio", filename)
+    assert os.path.exists(path), f"Test audio not found: {path}"
+    with open(path, "rb") as f:
         file_bytes = f.read()
     processor = Processor(client=object())
-    text, images = processor.process(file_bytes, "Hi there this is you.mp3")
-    print(text)
+    text, images = processor.process(file_bytes, filename)
     assert isinstance(text, str)
     assert text.strip() != ""
     assert images == []

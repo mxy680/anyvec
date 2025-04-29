@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anyvec"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python package for seamless vectorization for any content type"
 authors = ["Mark Shteyn <markshteyn1@gmail.com>"]
 readme = "README.md"
@@ -9,7 +9,7 @@ readme = "README.md"
 python = ">=3.10,<4.0"
 # To use audio transcription features, you must manually install OpenAI Whisper:
 # pip install git+https://github.com/openai/whisper.git
-pillow = "^11.2.1"
+pillow = "^10.3.0"
 ruff = "^0.11.7"
 requests = "^2.32.3"
 numpy = "^2.2.5"
@@ -23,7 +23,8 @@ odfpy = "^1.4.1"
 python-pptx = "^1.0.2"
 ebooklib = "^0.18"
 beautifulsoup4 = "^4.13.4"
-openai-whisper = {git = "https://github.com/openai/whisper.git"}
+opencv-python = "^4.11.0.86"
+moviepy = "^2.1.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -32,7 +33,7 @@ python-dotenv = "^1.1.0"
 
 
 [tool.poetry.extras]
-audio = ["openai-whisper"]
+audio = []
 
 [build-system]
 requires = ["poetry-core"]

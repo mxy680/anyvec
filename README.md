@@ -4,26 +4,53 @@ AnyVec is an open-source Python package that makes it easy to vectorize any type
 
 ---
 
-## Audio Transcription Support (Whisper)
+## How It Works
 
-To use audio transcription features (for .mp3, .wav, etc.), you must manually install OpenAI Whisper and ffmpeg:
+AnyVec automatically detects the file type and processes it using the appropriate extractor:
+
+- **Text:** Extracts and vectorizes plain text from .txt, .md, .json, .xml, .csv, and more.
+- **Images:** Extracts and vectorizes images from files like .png, .jpg, .jpeg, .bmp, .gif, .tiff, .webp, etc.
+- **Audio:** Transcribes speech from .mp3, .wav, .ogg, .m4a, etc. using OpenAI Whisper, then vectorizes the transcript.
+- **Video:** Extracts the first frame (thumbnail) and one frame per second, transcribes the audio track, and vectorizes both.
+- **Code:** Extracts code from .py, .js, .java, .cpp, .ipynb, and other common code files.
+- **PDF, Office, and More:** Supports a wide range of document formats.
+
+### Processing Flow
+1. **File Type Detection:** AnyVec uses MIME type and file extension to determine the file type.
+2. **Extraction:** The relevant extractor parses text, images, or audio from the file.
+3. **Vectorization:** The extracted content is sent to a CLIP-like model via API for embedding.
+4. **Unified Output:** You get back text and image vectors, regardless of input type.
+
+---
+
+## Quick Start / Usage
+
+### Installation
 
 ```bash
-pip install git+https://github.com/openai/whisper.git
+pip install anyvec
+# or, with Poetry
+poetry add anyvec
 ```
 
-If you're using Poetry, run:
+### Basic Example
 
-```bash
-poetry run pip install git+https://github.com/openai/whisper.git
+```python
+from anyvec.processing.processor import Processor
+
+with open("path/to/your/file.pdf", "rb") as f:
+    file_bytes = f.read()
+
+processor = Processor(client=object())  # Replace with your actual client
+text, images = processor.process(file_bytes, "file.pdf")
+
+print("Extracted text:", text)
+print("Extracted images:", images)
 ```
 
-You must also have ffmpeg installed on your system:
-- **macOS:** `brew install ffmpeg`
-- **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
-
-If Whisper is not installed, attempting to process audio files will result in a clear error message. See the code for details.
-
+- For audio and video files, make sure you have [Whisper](https://github.com/openai/whisper) and ffmpeg installed (see below).
+- For image and document files, no extra dependencies are required.
+ 
 ---
 
 ## Building the CLIP Docker Image
@@ -62,3 +89,27 @@ docker run -d -p 8000:8080 multi2vec-clip
 ```
 
 The API will still be available at http://localhost:8000 while the container runs in the background.
+
+---
+
+## Audio Transcription Support (Whisper)
+
+To use audio transcription features (for .mp3, .wav, etc.), you must manually install OpenAI Whisper and ffmpeg:
+
+```bash
+pip install git+https://github.com/openai/whisper.git
+```
+
+If you're using Poetry, run:
+
+```bash
+poetry run pip install git+https://github.com/openai/whisper.git
+```
+
+You must also have ffmpeg installed on your system:
+- **macOS:** `brew install ffmpeg`
+- **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
+
+If Whisper is not installed, attempting to process audio files will result in a clear error message. See the code for details.
+
+---

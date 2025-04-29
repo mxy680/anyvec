@@ -22,18 +22,20 @@ from anyvec.processing.document import (
 )
 
 from anyvec.processing.audio import transcribe_audio_whisper
+from anyvec.processing.video import extract_video_frames_and_audio
 
 # Mapping: mime type -> (text extractor, image extractor)
 mime_handlers = {
     # Audio
     "audio/wav": (transcribe_audio_whisper, lambda _: []),
     "audio/x-wav": (transcribe_audio_whisper, lambda _: []),
+    "audio/ogg": (transcribe_audio_whisper, lambda _: []),
+    "audio/m4a": (transcribe_audio_whisper, lambda _: []),
+    "audio/mp4a-latm": (transcribe_audio_whisper, lambda _: []),
     "audio/mpeg": (transcribe_audio_whisper, lambda _: []),
     "audio/mp3": (transcribe_audio_whisper, lambda _: []),
-    "audio/x-m4a": (transcribe_audio_whisper, lambda _: []),
     "audio/flac": (transcribe_audio_whisper, lambda _: []),
     "audio/x-flac": (transcribe_audio_whisper, lambda _: []),
-    "audio/ogg": (transcribe_audio_whisper, lambda _: []),
     "audio/webm": (transcribe_audio_whisper, lambda _: []),
     "audio/mp4": (transcribe_audio_whisper, lambda _: []),
     "audio/aac": (transcribe_audio_whisper, lambda _: []),
@@ -61,6 +63,43 @@ mime_handlers = {
     "text/markdown": (extract_text_plain, lambda _: []),
     # PDF
     "application/pdf": (extract_text_pdf, extract_images_pdf),
+    # Video
+    "video/mp4": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/webm": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/ogg": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/quicktime": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/x-matroska": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/avi": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/x-msvideo": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/x-ms-wmv": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
+    "video/mpeg": (
+        lambda b: extract_video_frames_and_audio(b)[1],
+        lambda b: extract_video_frames_and_audio(b)[0],
+    ),
     # Spreadsheets
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": (
         extract_text_xlsx,
