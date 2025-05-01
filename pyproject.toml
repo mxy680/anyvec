@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anyvec"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Python package for seamless vectorization for any content type"
 authors = ["Mark Shteyn <markshteyn1@gmail.com>"]
 readme = "README.md"
@@ -25,6 +25,11 @@ ebooklib = "^0.18"
 beautifulsoup4 = "^4.13.4"
 opencv-python = "^4.11.0.86"
 moviepy = "^2.1.2"
+markdown = "^3.8"
+pdfkit = "^1.0.0"
+weasyprint = "^65.1"
+pillow-heif = "^0.22.0"
+pillow-avif-plugin = "^1.5.2"
 
 
 [tool.poetry.group.dev.dependencies]

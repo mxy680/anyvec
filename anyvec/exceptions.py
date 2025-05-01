@@ -3,6 +3,18 @@ class AnyVecError(Exception):
 
     pass
 
+class InvalidFileInputError(AnyVecError):
+    """Raised when a string is neither a valid URL nor a file path."""
+    def __init__(self, file):
+        super().__init__(f"Provided string is neither a valid URL nor a file path: {file}")
+
+class InvalidFileURLError(AnyVecError):
+    """Raised when a file URL is not reachable or invalid."""
+    def __init__(self, url, message=None):
+        msg = message or f"Provided URL is not reachable or invalid: {url}"
+        super().__init__(msg)
+        self.url = url
+
 
 class APIConnectionError(AnyVecError):
     """Raised when there is an issue connecting to the API."""

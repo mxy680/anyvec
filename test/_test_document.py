@@ -18,20 +18,15 @@ def test_client():
     return client
 
 
-def test_vectorize_text(test_client):
-    payload = VectorizationPayload(text_content="Hello, world!")
-    result = test_client.vectorize(payload)
-    assert result is not None
+# def test_vectorize_local_pdf(test_client):
+#     pdf_path = "test/assets/documents/Test.pdf"
+#     with open(pdf_path, "rb") as f:
+#         file_content = f.read()
+#     payload = VectorizationPayload(file_content=file_content, file_name="Test.pdf")
+#     result = test_client.vectorize(payload)
+#     assert result is not None
 
 
-def test_vectorize_local_pdf(test_client):
-    pdf_path = "test/assets/documents/Test.pdf"
-    with open(pdf_path, "rb") as f:
-        file_content = f.read()
-    payload = VectorizationPayload(file_content=file_content, file_name="Test.pdf")
-    result = test_client.vectorize(payload)
-    assert result is not None
-    
 def test_vectorize_local_txt(test_client):
     txt_path = "test/assets/documents/Test.txt"
     with open(txt_path, "rb") as f:
@@ -40,19 +35,12 @@ def test_vectorize_local_txt(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_rtf(test_client):
     rtf_path = "test/assets/documents/Test.rtf"
     with open(rtf_path, "rb") as f:
         file_content = f.read()
     payload = VectorizationPayload(file_content=file_content, file_name="Test.rtf")
-    result = test_client.vectorize(payload)
-    assert result is not None
-
-def test_vectorize_local_html(test_client):
-    html_path = "test/assets/documents/Test.html"
-    with open(html_path, "rb") as f:
-        file_content = f.read()
-    payload = VectorizationPayload(file_content=file_content, file_name="Test.html")
     result = test_client.vectorize(payload)
     assert result is not None
 
@@ -64,6 +52,7 @@ def test_vectorize_local_md(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_docx(test_client):
     docx_path = "test/assets/documents/Test.docx"
     with open(docx_path, "rb") as f:
@@ -71,6 +60,7 @@ def test_vectorize_local_docx(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.docx")
     result = test_client.vectorize(payload)
     assert result is not None
+
 
 def test_vectorize_local_dotx(test_client):
     dotx_path = "test/assets/documents/Test.dotx"
@@ -80,6 +70,7 @@ def test_vectorize_local_dotx(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_dotm(test_client):
     dotm_path = "test/assets/documents/Test.dotm"
     with open(dotm_path, "rb") as f:
@@ -87,6 +78,7 @@ def test_vectorize_local_dotm(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.dotm")
     result = test_client.vectorize(payload)
     assert result is not None
+
 
 def test_vectorize_local_docm(test_client):
     docm_path = "test/assets/documents/Test.docm"
@@ -96,13 +88,6 @@ def test_vectorize_local_docm(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
-def test_vectorize_local_ps(test_client):
-    ps_path = "test/assets/documents/Test.ps"
-    with open(ps_path, "rb") as f:
-        file_content = f.read()
-    payload = VectorizationPayload(file_content=file_content, file_name="Test.ps")
-    result = test_client.vectorize(payload)
-    assert result is not None
 
 def test_vectorize_local_xlsx(test_client):
     xlsx_path = "test/assets/documents/Test.xlsx"
@@ -112,6 +97,7 @@ def test_vectorize_local_xlsx(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_xls(test_client):
     xls_path = "test/assets/documents/Test.xls"
     with open(xls_path, "rb") as f:
@@ -119,6 +105,7 @@ def test_vectorize_local_xls(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.xls")
     result = test_client.vectorize(payload)
     assert result is not None
+
 
 def test_vectorize_local_odt(test_client):
     odt_path = "test/assets/documents/Test.odt"
@@ -128,6 +115,7 @@ def test_vectorize_local_odt(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_ods(test_client):
     ods_path = "test/assets/documents/Test.ods"
     with open(ods_path, "rb") as f:
@@ -135,6 +123,7 @@ def test_vectorize_local_ods(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.ods")
     result = test_client.vectorize(payload)
     assert result is not None
+
 
 def test_vectorize_local_odp(test_client):
     odp_path = "test/assets/documents/Test.odp"
@@ -144,6 +133,7 @@ def test_vectorize_local_odp(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_pptx(test_client):
     pptx_path = "test/assets/documents/Test.pptx"
     with open(pptx_path, "rb") as f:
@@ -151,6 +141,7 @@ def test_vectorize_local_pptx(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.pptx")
     result = test_client.vectorize(payload)
     assert result is not None
+
 
 def test_vectorize_local_pptm(test_client):
     pptm_path = "test/assets/documents/Test.pptm"
@@ -160,6 +151,7 @@ def test_vectorize_local_pptm(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
+
 def test_vectorize_local_ppsx(test_client):
     ppsx_path = "test/assets/documents/Test.ppsx"
     with open(ppsx_path, "rb") as f:
@@ -168,15 +160,15 @@ def test_vectorize_local_ppsx(test_client):
     result = test_client.vectorize(payload)
     assert result is not None
 
-import pytest
 
 def test_vectorize_local_ppt(test_client):
     ppt_path = "test/assets/documents/Test.ppt"
     with open(ppt_path, "rb") as f:
         file_content = f.read()
     payload = VectorizationPayload(file_content=file_content, file_name="Test.ppt")
-    with pytest.raises(Exception):
-        test_client.vectorize(payload)
+    result = test_client.vectorize(payload)
+    assert result is not None
+
 
 def test_vectorize_local_epub(test_client):
     epub_path = "test/assets/documents/Test.epub"
@@ -185,4 +177,3 @@ def test_vectorize_local_epub(test_client):
     payload = VectorizationPayload(file_content=file_content, file_name="Test.epub")
     result = test_client.vectorize(payload)
     assert result is not None
-

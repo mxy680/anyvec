@@ -29,7 +29,7 @@ class AnyVecClient:
         """Run tests on the clip-inference endpoint."""
         test_all(self.url)
 
-    def vectorize(self, request: VectorizationPayload, **kwargs):
+    def vectorize(self, request: VectorizationPayload, ocr: bool = True, **kwargs):
         """
         Vectorizes a file or text and stores it in Weaviate.
 
@@ -59,13 +59,22 @@ class AnyVecClient:
             text = request.text_content
             images = []  # No image processing needed
         else:
-            text, images = self.processor.process(
-                request.file_content or request.file_url, file_name=request.file_name
+            # Infer OCR URL from self.url
+            ocr_url = self.url.rstrip("/") + "/ocr"
+            text, images, ocr_text = self.processor.process(
+                request.file_content or request.file_url,
+                file_name=request.file_name,
+                ocr=ocr,
+                ocr_url=ocr_url,
             )
+
+        # Use OCR text if ocr is requested and result present
+        if ocr and ocr_text:
+            text = ocr_text
 
         if not text and not images:
             raise EmptyFileError()
-        
+
         # Vectorize and store in Weaviate
         return self.vectorizer.vectorize(text, images, **kwargs)
 

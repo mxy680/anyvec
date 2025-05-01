@@ -6,16 +6,30 @@ AnyVec is an open-source Python package that makes it easy to vectorize any type
 
 ## How It Works
 
-AnyVec automatically detects the file type and processes it using the appropriate extractor:
+AnyVec automatically detects the file type and processes it using the appropriate extractor.
 
-- **Text:** Extracts and vectorizes plain text from .txt, .md, .json, .xml, .csv, and more.
-- **Images:** Extracts and vectorizes images from files like .png, .jpg, .jpeg, .bmp, .gif, .tiff, .webp, etc.
-- **Audio:** Transcribes speech from .mp3, .wav, .ogg, .m4a, etc. using OpenAI Whisper, then vectorizes the transcript.
-- **Video:** Extracts the first frame (thumbnail) and one frame per second, transcribes the audio track, and vectorizes both.
-- **Code:** Extracts code from .py, .js, .java, .cpp, .ipynb, and other common code files.
-- **PDF, Office, and More:** Supports a wide range of document formats.
+---
+
+## Supported File Types
+
+| Category         | Extensions / MIME Types                                                                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Text**         | .txt, .md, .rtf, .json, .xml, .csv, .tsv, .log, .html, .markdown, .rst, .yaml, .yml                                                                               |
+| **Image**        | .png, .jpg, .jpeg, .bmp, .gif, .tiff, .tif, .webp, .ico, .svg, .jfif, .heic, .avif                                                                                |
+| **Audio**        | .mp3, .wav, .ogg, .m4a, .flac, .aac, .webm, .mp4a, .mpeg, .mp4, .x-wav, .x-flac, .mp4a-latm                                                                       |
+| **Video**        | .mp4, .webm, .ogg, .mov, .mkv, .avi, .wmv, .mpeg, .mpg, .x-msvideo, .x-ms-wmv, .x-matroska, .quicktime                                                            |
+| **Spreadsheet**  | .xlsx, .xls, .ods                                                                                                                                                 |
+| **Word**         | .docx, .dotx, .dotm, .docm, .odt                                                                                                                                  |
+| **Presentation** | .pptx, .ppsx, .pptm, .odp                                                                                                                                         |
+| **PDF**          | .pdf                                                                                                                                                              |
+| **EPUB**         | .epub                                                                                                                                                             |
+| **Postscript**   | .ps                                                                                                                                                               |
+| **Code**         | .py, .js, .ts, .tsx, .jsx, .java, .cpp, .c, .h, .hpp, .cs, .go, .rb, .php, .pl, .sh, .swift, .scala, .lua, .f90, .f95, .erl, .exs, .bat, .sql, .lisp, .vb, .ipynb |
+
+> For the most up-to-date list, see the `mime_handlers` dictionary in the codebase.
 
 ### Processing Flow
+
 1. **File Type Detection:** AnyVec uses MIME type and file extension to determine the file type.
 2. **Extraction:** The relevant extractor parses text, images, or audio from the file.
 3. **Vectorization:** The extracted content is sent to a CLIP-like model via API for embedding.
@@ -50,7 +64,7 @@ print("Extracted images:", images)
 
 - For audio and video files, make sure you have [Whisper](https://github.com/openai/whisper) and ffmpeg installed (see below).
 - For image and document files, no extra dependencies are required.
- 
+
 ---
 
 ## Building the CLIP Docker Image
@@ -107,6 +121,7 @@ poetry run pip install git+https://github.com/openai/whisper.git
 ```
 
 You must also have ffmpeg installed on your system:
+
 - **macOS:** `brew install ffmpeg`
 - **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
 

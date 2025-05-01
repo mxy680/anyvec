@@ -1,43 +1,51 @@
-import requests
-import mimetypes
-from typing import Union
-import base64
+import os
 
-from anyvec.processing.document import extract_text_plain
-from anyvec.exceptions import UnsupportedFileTypeError
-from anyvec.processing.filetype_maps import (
-    mime_handlers,
-    image_mime_types,
-    code_file_exts,
+from .document.doc_mime_maps import document_mime_types, document_can_store_images
+from .document import extract_text_simple_doc
+from .image.image_mime_maps import image_extensions
+from .utils import resolve_file_to_bytes
+from anyvec.processing.image.image_ocr_and_vectorize import (
+    ocr_and_vectorize_image_bytes,
 )
+from anyvec.processing.document.document_pdf_to_vec import pdf_document_to_vectors
 
 
 class Processor:
     def __init__(self, client):
         self.client = client
 
-    def process(self, file: str | bytes, file_name: str) -> Union[str, bytes]:
-        # Get the file file_bytes
-        if isinstance(file, str):
-            response = requests.get(file, stream=True)
+    def process(
+        self, file: str | bytes, file_name: str, ocr: bool, ocr_url: str
+    ) -> tuple[str, list[str], str | None]:
+        try:
+            ext = os.path.splitext(file_name)[1].lower()
+        except Exception as e:
+            raise RuntimeError(f"Failed to extract extension from file name '{file_name}': {e}")
 
-            if response.status_code != 200:
-                raise Exception(f"Failed to download file from {file}")
+        # Always resolve file to bytes (handles str/bytes/url/path)
+        try:
+            file = resolve_file_to_bytes(file)
+        except Exception as e:
+            raise RuntimeError(f"Failed to resolve file to bytes for '{file_name}': {e}")
 
-            file_bytes = response.content
-        elif isinstance(file, bytes):
-            file_bytes = file
+        if ext in image_extensions:
+            try:
+                return ocr_and_vectorize_image_bytes(file, file_name, ocr_url)
+            except Exception as e:
+                raise RuntimeError(f"Image processing failed for '{file_name}': {e}")
 
-        # Get the mime type
-        mime_type = mimetypes.guess_type(file_name)[0]
-
-        if mime_type in mime_handlers.keys():
-            text_extractor, image_extractor = mime_handlers[mime_type]
-            return text_extractor(file_bytes), image_extractor(file_bytes)
-        elif mime_type in image_mime_types:
-            # For standard image formats, the image is the file itself. Return as base64.
-            return "", [base64.b64encode(file_bytes).decode("utf-8")]
-        elif file_name.lower().endswith(code_file_exts):
-            return extract_text_plain(file_bytes), []
+        if ext in document_mime_types:
+            can_images = document_can_store_images.get(ext, False)
+            if can_images:
+                try:
+                    return pdf_document_to_vectors(file, ext, ocr, ocr_url)
+                except Exception as e:
+                    raise RuntimeError(f"Document-to-PDF processing failed for '{file_name}': {e}")
+            else:
+                try:
+                    text = extract_text_simple_doc(file, ext)
+                    return (text, [], None)
+                except Exception as e:
+                    raise RuntimeError(f"Simple document text extraction failed for '{file_name}': {e}")
         else:
-            raise UnsupportedFileTypeError(mime_type)
+            raise RuntimeError(f"Unsupported file type: {ext} for file '{file_name}'")
