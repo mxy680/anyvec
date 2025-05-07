@@ -12,19 +12,18 @@ AnyVec automatically detects the file type and processes it using the appropriat
 
 ## Supported File Types
 
-| Category         | Extensions / MIME Types                                                                                                                                           |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Text**         | .txt, .md, .rtf, .json, .xml, .csv, .tsv, .log, .html, .markdown, .rst, .yaml, .yml                                                                               |
-| **Image**        | .png, .jpg, .jpeg, .bmp, .gif, .tiff, .tif, .webp, .ico, .svg, .jfif, .heic, .avif                                                                                |
-| **Audio**        | .mp3, .wav, .ogg, .m4a, .flac, .aac, .webm, .mp4a, .mpeg, .mp4, .x-wav, .x-flac, .mp4a-latm                                                                       |
-| **Video**        | .mp4, .webm, .ogg, .mov, .mkv, .avi, .wmv, .mpeg, .mpg, .x-msvideo, .x-ms-wmv, .x-matroska, .quicktime                                                            |
-| **Spreadsheet**  | .xlsx, .xls, .ods                                                                                                                                                 |
-| **Word**         | .docx, .dotx, .dotm, .docm, .odt                                                                                                                                  |
-| **Presentation** | .pptx, .ppsx, .pptm, .odp                                                                                                                                         |
-| **PDF**          | .pdf                                                                                                                                                              |
-| **EPUB**         | .epub                                                                                                                                                             |
-| **Postscript**   | .ps                                                                                                                                                               |
-| **Code**         | .py, .js, .ts, .tsx, .jsx, .java, .cpp, .c, .h, .hpp, .cs, .go, .rb, .php, .pl, .sh, .swift, .scala, .lua, .f90, .f95, .erl, .exs, .bat, .sql, .lisp, .vb, .ipynb |
+| Category         | Extensions / MIME Types                                                                                                                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Text/Docs**    | .txt, .rtf, .md, .doc, .docx, .odt                                                                                                                                                                            |
+| **PDF**          | .pdf                                                                                                                                                                                                          |
+| **Presentation** | .ppt, .pptx, .ppsx, .pptm, .odp                                                                                                                                                                               |
+| **Spreadsheet**  | .xls, .xlsx, .ods                                                                                                                                                                                             |
+| **EPUB**         | .epub                                                                                                                                                                                                         |
+| **Templates**    | .dotm, .dotx, .docm                                                                                                                                                                                           |
+| **Image**        | .png, .jpg, .jpeg, .jpe, .bmp, .gif, .tiff, .ico, .icns, .heic, .avif, .webp, .psd                                                                                                                            |
+| **Audio**        | .mp3, .wav, .ogg, .m4a                                                                                                                                                                                        |
+| **Video**        | .mp4, .avi, .mov, .mkv, .webm, .mpeg, .mpg                                                                                                                                                                    |
+| **Code**         | .py, .js, .ts, .tsx, .jsx, .java, .cpp, .c, .h, .hpp, .cs, .go, .rb, .php, .pl, .sh, .swift, .scala, .lua, .f90, .f95, .erl, .exs, .bat, .sql, .lisp, .vb, .ipynb, .xml, .yml, .yaml, .json, .kt, .rst, .html |
 
 > For the most up-to-date list, see the `mime_handlers` dictionary in the codebase.
 
@@ -53,19 +52,17 @@ AnyVec automatically detects the file type and processes it using the appropriat
 
 - Audio bytes are sent to a transcription server (e.g., OpenAI Whisper).
 - The server returns the transcribed text, which is then vectorized.
-- Requires `whisper` and `ffmpeg` to be installed.
 
 **Video Files:**
 
 - The video is processed in two ways:
   1. **Audio Extraction & Transcription:**
-     - Audio is extracted from the video using MoviePy (`from moviepy import VideoFileClip`).
-     - The extracted audio is sent to the `/transcribe` endpoint in your docker container (compatible with Whisper or similar servers).
+     - Audio is extracted from the video using MoviePy.
+     - The extracted audio is sent to the `/transcribe` endpoint in your inference container.
      - The returned transcript is used for vectorization.
   2. **Frame Extraction:**
-     - Frames are extracted at 1-second intervals (and the first frame) using OpenCV.
+     - Frames are extracted at n-second intervals using OpenCV.
      - Frames are returned as base64-encoded JPEGs for downstream processing or vectorization.
-- Both transcript (text) and frames (images) are returned.
 
 **Return Values:**
 
@@ -80,31 +77,9 @@ AnyVec automatically detects the file type and processes it using the appropriat
 
 ```bash
 pip install anyvec
-# or, with Poetry
-poetry add anyvec
 ```
 
-### Basic Example
-
-```python
-from anyvec.client import AnyVecClient
-from anyvec.models import VectorizationPayload
-
-client = AnyVecClient("http://localhost:8000")
-
-# Process a PDF
-with open("example.pdf", "rb") as f:
-    file_content = f.read()
-payload = VectorizationPayload(file_content=file_content, file_name="example.pdf")
-result = client.vectorize(payload)
-print("Vectorization result:", result)
-```
-
----
-
-## Using the Public CLIP Docker Image
-
-You can skip building locally and pull the latest public image directly from Docker Hub:
+For inference, you can skip building locally and pull the latest public image directly from Docker Hub:
 
 ```bash
 docker pull mxy680/clip-inference:latest
@@ -127,3 +102,19 @@ docker run -d -p 8000:8080 mxy680/clip-inference:latest
 The API will still be available at http://localhost:8000 while the container runs in the background.
 
 ---
+
+### Basic Example
+
+```python
+from anyvec.client import AnyVecClient
+from anyvec.models import VectorizationPayload
+
+client = AnyVecClient("http://localhost:8000")
+
+# Process a PDF
+with open("example.pdf", "rb") as f:
+    file_content = f.read()
+payload = VectorizationPayload(file_content=file_content, file_name="example.pdf")
+result = client.vectorize(payload)
+print("Vectorization result:", result)
+```
