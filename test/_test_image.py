@@ -2,16 +2,16 @@ import os
 import pytest
 from anyvec.client import AnyVecClient
 from anyvec.models import VectorizationPayload
+
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-
 @pytest.fixture(scope="module")
 def test_client():
-    client = AnyVecClient(os.getenv("CLIP_INFERENCE_URL"))
-    assert client is not None
+    url = os.getenv("CLIP_INFERENCE_URL")
+    client = AnyVecClient(url)
     return client
 
 

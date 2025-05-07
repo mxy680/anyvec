@@ -22,7 +22,7 @@ class AnyVecClient:
     def __init__(self, url: str, **kwargs):
         self.url = url
         self._run_tests()
-        self.processor = Processor(self)
+        self.processor = Processor(self, url=self.url)
         self.vectorizer = Vectorizer(self)
 
     def _run_tests(self):
@@ -60,17 +60,12 @@ class AnyVecClient:
             images = []  # No image processing needed
         else:
             # Infer OCR URL from self.url
-            ocr_url = self.url.rstrip("/") + "/ocr"
-            text, images, ocr_text = self.processor.process(
+            text, images = self.processor.process(
                 request.file_content or request.file_url,
                 file_name=request.file_name,
                 ocr=ocr,
-                ocr_url=ocr_url,
             )
 
-        # Use OCR text if ocr is requested and result present
-        if ocr and ocr_text:
-            text = ocr_text
 
         if not text and not images:
             raise EmptyFileError()

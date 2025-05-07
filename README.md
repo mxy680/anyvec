@@ -37,6 +37,43 @@ AnyVec automatically detects the file type and processes it using the appropriat
 
 ---
 
+### Detailed Processing Flow
+
+**Text Files:**
+
+- Extracts raw text using format-appropriate parsers.
+- Returns extracted text for vectorization.
+
+**Image Files:**
+
+- Returns the image data as base64-encoded JPEGs or PNGs.
+- Optionally, OCR (optical character recognition) can be performed for text extraction.
+
+**Audio Files:**
+
+- Audio bytes are sent to a transcription server (e.g., OpenAI Whisper).
+- The server returns the transcribed text, which is then vectorized.
+- Requires `whisper` and `ffmpeg` to be installed.
+
+**Video Files:**
+
+- The video is processed in two ways:
+  1. **Audio Extraction & Transcription:**
+     - Audio is extracted from the video using MoviePy (`from moviepy import VideoFileClip`).
+     - The extracted audio is sent to the `/transcribe` endpoint in your docker container (compatible with Whisper or similar servers).
+     - The returned transcript is used for vectorization.
+  2. **Frame Extraction:**
+     - Frames are extracted at 1-second intervals (and the first frame) using OpenCV.
+     - Frames are returned as base64-encoded JPEGs for downstream processing or vectorization.
+- Both transcript (text) and frames (images) are returned.
+
+**Return Values:**
+
+- For text, audio, and video: returns extracted text (or transcript) and/or images (frames).
+- For images: returns images and optionally OCR text.
+
+---
+
 ## Quick Start / Usage
 
 ### Installation
@@ -50,81 +87,43 @@ poetry add anyvec
 ### Basic Example
 
 ```python
-from anyvec.processing.processor import Processor
+from anyvec.client import AnyVecClient
+from anyvec.models import VectorizationPayload
 
-with open("path/to/your/file.pdf", "rb") as f:
-    file_bytes = f.read()
+client = AnyVecClient("http://localhost:8000")
 
-processor = Processor(client=object())  # Replace with your actual client
-text, images = processor.process(file_bytes, "file.pdf")
-
-print("Extracted text:", text)
-print("Extracted images:", images)
+# Process a PDF
+with open("example.pdf", "rb") as f:
+    file_content = f.read()
+payload = VectorizationPayload(file_content=file_content, file_name="example.pdf")
+result = client.vectorize(payload)
+print("Vectorization result:", result)
 ```
-
-- For audio and video files, make sure you have [Whisper](https://github.com/openai/whisper) and ffmpeg installed (see below).
-- For image and document files, no extra dependencies are required.
 
 ---
 
-## Building the CLIP Docker Image
+## Using the Public CLIP Docker Image
 
-**First, clone this repository and change into the project directory:**
-
-```bash
-git clone https://github.com/mxy680/clip-inference.git
-cd clip-inference
-```
-
-Then, to build the Docker image for the CLIP component, run the following commands from the project root:
+You can skip building locally and pull the latest public image directly from Docker Hub:
 
 ```bash
-cd clip
-LOCAL_REPO="multi2vec-clip" \
-  TEXT_MODEL_NAME="sentence-transformers/clip-ViT-B-32-multilingual-v1" \
-  CLIP_MODEL_NAME="clip-ViT-B-32" \
-  ./scripts/build.sh
+docker pull mxy680/clip-inference:latest
 ```
 
-## Running the CLIP Docker Container
-
-After building the image, run the container and map port 8000 on your host to port 8080 in the container (where the API runs):
+Then run the container:
 
 ```bash
-docker run --rm -it -p 8000:8080 multi2vec-clip
+docker run --rm -it -p 8000:8080 mxy680/clip-inference:latest
 ```
 
-The API will then be available at http://localhost:8000.
+The API will be available at http://localhost:8000.
 
 To run the container in detached mode (in the background), use:
 
 ```bash
-docker run -d -p 8000:8080 multi2vec-clip
+docker run -d -p 8000:8080 mxy680/clip-inference:latest
 ```
 
 The API will still be available at http://localhost:8000 while the container runs in the background.
-
----
-
-## Audio Transcription Support (Whisper)
-
-To use audio transcription features (for .mp3, .wav, etc.), you must manually install OpenAI Whisper and ffmpeg:
-
-```bash
-pip install git+https://github.com/openai/whisper.git
-```
-
-If you're using Poetry, run:
-
-```bash
-poetry run pip install git+https://github.com/openai/whisper.git
-```
-
-You must also have ffmpeg installed on your system:
-
-- **macOS:** `brew install ffmpeg`
-- **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
-
-If Whisper is not installed, attempting to process audio files will result in a clear error message. See the code for details.
 
 ---

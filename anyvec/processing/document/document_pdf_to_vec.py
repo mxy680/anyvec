@@ -9,7 +9,7 @@ from anyvec.processing.utils import b64encode_bytes
 def pdf_document_to_vectors(file: bytes, ext: str, ocr: bool, ocr_url: str):
     """
     Convert a document to PDF (with optional OCR), extract images and text, and return for vectorization.
-    Returns: (extracted_text, image_bytes_list, ocr_text)
+    Returns: (extracted_text, image_bytes_list, ocr_text). Most callers only use the first two values.
     """
     # Convert to PDF (with optional OCR)
     pdf_result = convert_to_pdf(file, ext, ocr=ocr, ocr_url=ocr_url)

@@ -18,13 +18,13 @@ def test_client():
     return client
 
 
-# def test_vectorize_local_pdf(test_client):
-#     pdf_path = "test/assets/documents/Test.pdf"
-#     with open(pdf_path, "rb") as f:
-#         file_content = f.read()
-#     payload = VectorizationPayload(file_content=file_content, file_name="Test.pdf")
-#     result = test_client.vectorize(payload)
-#     assert result is not None
+def test_vectorize_local_pdf(test_client):
+    pdf_path = "test/assets/documents/Test.pdf"
+    with open(pdf_path, "rb") as f:
+        file_content = f.read()
+    payload = VectorizationPayload(file_content=file_content, file_name="Test.pdf")
+    result = test_client.vectorize(payload)
+    assert result is not None
 
 
 def test_vectorize_local_txt(test_client):
