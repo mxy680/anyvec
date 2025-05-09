@@ -1664,6 +1664,21 @@ files = [
 ]
 
 [[package]]
+name = "striprtf"
+version = "0.0.29"
+description = "A simple library to convert rtf to text"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "striprtf-0.0.29-py3-none-any.whl", hash = "sha256:0fc6a41999d015358d19627776b616424dd501ad698105c81d76734d1e14d91b"},
+    {file = "striprtf-0.0.29.tar.gz", hash = "sha256:5a822d075e17417934ed3add6fc79b5fc8fb544fe4370b2f894cdd28f0ddd78e"},
+]
+
+[package.extras]
+dev = ["build (>=1.0.0)", "pytest (>=7.0.0)"]
+
+[[package]]
 name = "tinycss2"
 version = "1.4.0"
 description = "A tiny CSS parser"
@@ -1969,4 +1984,4 @@ audio = []
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "e62a4cbd9b01df073290b423d770b03f9caba9a4b48b1989ac792533a79ed690"
+content-hash = "9d5c542f31bbafbba819fc46b742d991e9dc0f2ae69e1872c95c41ee2eecd015"

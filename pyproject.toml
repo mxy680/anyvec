@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anyvec"
-version = "0.1.6"
+version = "0.1.7"
 description = "A Python package for seamless vectorization for any content type"
 authors = ["Mark Shteyn <markshteyn1@gmail.com>"]
 readme = "README.md"
@@ -31,6 +31,7 @@ pillow-heif = "0.22.0"
 pillow-avif-plugin = "1.5.2"
 wand = "0.6.13"
 av = "14.3.0"
+striprtf = "^0.0.29"
 
 
 [tool.poetry.group.dev.dependencies]
