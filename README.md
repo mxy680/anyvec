@@ -4,12 +4,6 @@ AnyVec is an open-source Python package that makes it easy to vectorize any type
 
 ---
 
-## How It Works
-
-AnyVec automatically detects the file type and processes it using the appropriate extractor.
-
----
-
 ## Supported File Types
 
 | Category         | Extensions / MIME Types                                                                                                                                                                                       |
