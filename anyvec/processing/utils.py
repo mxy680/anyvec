@@ -4,9 +4,11 @@ from anyvec.exceptions import InvalidFileInputError, InvalidFileURLError
 
 import base64
 
+
 def b64encode_bytes(data_bytes: bytes) -> str:
     """Base64-encode bytes and return as utf-8 string."""
     return base64.b64encode(data_bytes).decode("utf-8")
+
 
 def resolve_file_to_bytes(file: str | bytes) -> bytes:
     """
@@ -30,4 +32,5 @@ def resolve_file_to_bytes(file: str | bytes) -> bytes:
                     return f.read()
             else:
                 raise InvalidFileInputError(file)
-    raise InvalidFileInputError(file)
+    else:
+        raise InvalidFileInputError(file)

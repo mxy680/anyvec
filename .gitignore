@@ -93,8 +93,6 @@ poetry.lock
 .env
 .env.*
 
-# VS Code
-.vscode/
 
 # PyCharm
 .idea/

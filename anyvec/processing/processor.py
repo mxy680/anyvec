@@ -1,6 +1,6 @@
 import os
 from .document.doc_mime_maps import document_mime_types, document_can_store_images
-from .document import extract_text_simple_doc
+from .document.document_extract import extract_text_simple_doc
 from .image.image_mime_maps import image_extensions
 from .utils import resolve_file_to_bytes
 from anyvec.processing.document.document_pdf_to_vec import pdf_document_to_vectors

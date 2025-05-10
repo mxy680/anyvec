@@ -1,7 +1,7 @@
 from anyvec.tests import test_all
 from anyvec.processing.processor import Processor
-from anyvec.vectorization.vectorizer import Vectorizer
-from anyvec.vectorization.utils import cosine_similarity
+from anyvec.vectorization import Vectorizer
+from anyvec.vectorization import cosine_similarity
 from anyvec.models import VectorizationPayload
 from anyvec.exceptions import (
     MissingFileNameError,
@@ -29,13 +29,12 @@ class AnyVecClient:
         """Run tests on the clip-inference endpoint."""
         test_all(self.url)
 
-    def vectorize(self, request: VectorizationPayload, ocr: bool = True, **kwargs):
+    def vectorize(self, request: VectorizationPayload, ocr: bool = True):
         """
         Vectorizes a file or text and stores it in Weaviate.
 
         Args:
             request (VectorizationRequest): The vectorization request object.
-            **kwargs: Additional parameters.
 
         Returns:
             dict: Success status and collection name.
@@ -71,7 +70,7 @@ class AnyVecClient:
             raise EmptyFileError()
 
         # Vectorize and store in Weaviate
-        return self.vectorizer.vectorize(text, images, **kwargs)
+        return self.vectorizer.vectorize(text, images)
 
     def compare(self, vector1: list[float], vector2: list[float]):
         """
@@ -80,7 +79,6 @@ class AnyVecClient:
         Args:
             vector1 (list[float]): The first vector.
             vector2 (list[float]): The second vector.
-            **kwargs: Additional parameters.
 
         Returns:
             float: The similarity score.

@@ -1,8 +1,8 @@
 """PDF conversion utilities for various document types."""
 
-from .ocr import ocr_pdf_bytes
+from .document_ocr import ocr_pdf_bytes
 from .doc_mime_maps import document_can_store_images
-from .office import convert_office_to_pdf
+from .document_office import convert_office_to_pdf
 from weasyprint import HTML
 import markdown
 from ebooklib import epub

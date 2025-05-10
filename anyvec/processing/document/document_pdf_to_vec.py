@@ -1,4 +1,4 @@
-from anyvec.processing.document.pdf import (
+from anyvec.processing.document.document_pdf import (
     convert_to_pdf,
     extract_images_from_pdf_buffer,
     extract_text_from_pdf_buffer,
